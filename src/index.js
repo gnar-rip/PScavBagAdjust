@@ -12,9 +12,9 @@ const Logger = createLogger({
   transports: [new transports.Console()]
 });
 
-class BackpackSpawnRateMod {
+class PScavBagAdjust {
   constructor() {
-    this.mod = "BackpackSpawnRateMod";
+    this.mod = "PScavBagAdjust";
     Logger.info(`Loading: ${this.mod}`);
   }
 
@@ -35,7 +35,7 @@ class BackpackSpawnRateMod {
         throw new Error("Bots data are undefined");
       }
 
-      // Modify backpack spawn rates for player scavs only
+      // Modify backpack spawn rates here
       this.modifyBackpackSpawnRates(bots);
     } catch (error) {
       Logger.error(`[${this.mod}] Error in postDBLoad: ${error.message}`);
@@ -43,9 +43,8 @@ class BackpackSpawnRateMod {
   }
 
   modifyBackpackSpawnRates(bots) {
-    const type = 'cursedassault'; // Targeting only player scavs
+    const type = 'cursedassault'; // Target only 'cursedassault' type which represents player scavs
     const botType = bots.types[type];
-
     if (!botType) {
       Logger.error(`[${this.mod}] Bots.types.${type} is undefined`);
       return;
@@ -69,20 +68,22 @@ class BackpackSpawnRateMod {
       return;
     }
 
-    // Modify backpack values
-    for (const key in backpacks) {
-      backpacks[key] = 1.0; // Example: Set the spawn chance to 100%
+    // Modify all backpack spawn rates to 100%
+    for (const key of Object.keys(backpacks)) {
+      backpacks[key] = 1.0; // Set the spawn chance to 100%
     }
 
-    Logger.info(`[${this.mod}] Modified backpack spawn rates for player scavs (cursedassault).`);
+    Logger.info(`[${this.mod}] Modified backpack spawn rates for player scavs.`);
   }
 }
 
 // Implement the IPostDBLoadMod interface
 module.exports = {
-  mod: new BackpackSpawnRateMod(),
+  mod: new PScavBagAdjust(),
   IPostDBLoadMod: true
 };
+
+
 
 
 

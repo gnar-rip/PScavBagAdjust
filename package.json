@@ -1,5 +1,5 @@
 {
-    "name": "GnarScavBagSpawnrate",
+    "name": "PScavBagAdjust",
     "version": "0.0.1",
     "akiVersion": "3.8.1",
     "description": "A mod to control the spawn rate of backpacks on Scav Runs",
