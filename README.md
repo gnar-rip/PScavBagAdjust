@@ -29,7 +29,7 @@ The mod uses a custom logger to provide feedback on its actions. You will see me
 
 ## Credits
 
-- Mod Developer: [Your Name]
+- Mod Developer: gnar
 
 ## License
 
