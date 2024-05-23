@@ -11,9 +11,23 @@ PScavBagAdjust is a mod for Single Player Tarkov (SPT-AKI) that adjusts the spaw
 
 ## Installation
 
-1. Download the mod files.
-2. Extract the contents of the downloaded archive.
-3. Copy the extracted folder into the `mods` directory of your SPT-AKI installation.
+1. **Download the Mod Files:**
+   - Download the latest release of PScavBagAdjust from the [Releases](https://github.com/your-repo/releases) page.
+
+2. **Extract the Mod Files:**
+   - Right-click the downloaded archive (ZIP file) and select "Extract All..." to extract the contents to a folder of your choice.
+
+3. **Copy the Mod Folder:**
+   - Open the extracted folder. You should see a folder named `PScavBagAdjust`.
+   - Copy the `PScavBagAdjust` folder.
+
+4. **Paste the Mod Folder into SPT-AKI:**
+   - Navigate to your SPT-AKI installation directory. This is typically where your SPT-AKI server files are located.
+   - Inside the SPT-AKI installation directory, locate the `user/mods` folder.
+   - Paste the `PScavBagAdjust` folder into the `user/mods` folder.
+
+5. **Verify the Installation:**
+   - Ensure that the `PScavBagAdjust` folder contains all necessary files, including the `package.json` and the main script files.
 
 ## Usage
 
@@ -29,7 +43,7 @@ The mod uses a custom logger to provide feedback on its actions. You will see me
 
 ## Credits
 
-- Mod Developer: gnar
+- Mod Developer: [Your Name]
 
 ## License
 
