@@ -1,0 +1,8 @@
+{
+    "name": "GnarScavBagSpawnrate",
+    "version": "0.0.1",
+    "description": "A mod to control the spawn rate of backpacks on Scav Runs",
+    "main": "src/index.js",
+    "author": "gnar",
+    "license": "MIT"
+}
