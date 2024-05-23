@@ -1,4 +1,6 @@
 const { createLogger, transports, format } = require("winston");
+const fs = require('fs');
+const path = require('path');
 
 // Define a custom logger with console output
 const Logger = createLogger({
@@ -15,86 +17,98 @@ const Logger = createLogger({
 class PScavBagAdjust {
   constructor() {
     this.mod = "PScavBagAdjust";
+    this.config = this.loadConfig();
     Logger.info(`Loading: ${this.mod}`);
+  }
+
+  loadConfig() {
+    try {
+      const configPath = path.join(__dirname, '../mod.config.json');
+      if (fs.existsSync(configPath)) {
+        const configData = fs.readFileSync(configPath, 'utf8');
+        const parsedData = JSON.parse(configData);
+        Logger.info(`[${this.mod}] Configuration file loaded successfully.`);
+        return parsedData.settings;
+      } else {
+        throw new Error("Configuration file not found.");
+      }
+    } catch (error) {
+      Logger.error(`[${this.mod}] Error loading config: ${error.message}`);
+      return { playerScavBackpackSpawnRate: { default: 100 } };
+    }
   }
 
   postDBLoad(container) {
     try {
       const DatabaseServer = container.resolve("DatabaseServer");
-      if (!DatabaseServer) {
-        throw new Error("DatabaseServer is undefined");
-      }
-
       const db = DatabaseServer.tableData;
-      if (!db) {
-        throw new Error("Database tableData are undefined");
-      }
-
       const bots = db.bots;
-      if (!bots) {
-        throw new Error("Bots data are undefined");
+      const playerScavType = bots.types.cursedassault;
+
+      if (!playerScavType) {
+        throw new Error("playerScavType (cursedassault) is undefined");
       }
 
-      // Modify backpack spawn rates here
-      this.modifyBackpackSpawnRates(bots);
+      const inventory = playerScavType.inventory;
+      const items = inventory.items;
+      const backpacks = items.Backpack;
+
+      if (typeof backpacks !== 'object') {
+        throw new Error("Backpacks is not an object");
+      }
+
+      // Modify backpack spawn rates based on config
+      const spawnRate = this.config.playerScavBackpackSpawnRate.default / 100;
+      let modifiedCount = 0;
+      for (const key in backpacks) {
+        backpacks[key] = spawnRate;
+        modifiedCount++;
+      }
+
+      Logger.info(`[${this.mod}] Modified ${modifiedCount} player scav backpack spawn rates to ${spawnRate * 100}%.`);
     } catch (error) {
       Logger.error(`[${this.mod}] Error in postDBLoad: ${error.message}`);
     }
   }
 
-  modifyBackpackSpawnRates(bots) {
-    const type = 'cursedassault'; // Target only 'cursedassault' type which represents player scavs
-    const botType = bots.types[type];
-    if (!botType) {
-      Logger.error(`[${this.mod}] Bots.types.${type} is undefined`);
-      return;
-    }
+  registerSettings(container) {
+    try {
+      Logger.info(`[${this.mod}] Attempting to register settings...`);
+      const modConfig = container.resolve("ModConfig");
+      modConfig.register({
+        id: "PScavBagAdjust",
+        name: "PScavBagAdjust",
+        settings: {
+          playerScavBackpackSpawnRate: {
+            default: 100,
+            min: 0,
+            max: 100,
+            step: 1,
+            type: "slider",
+            name: "Player Scav Backpack Spawn Rate",
+            description: "Adjust the spawn rate percentage for player scav backpacks."
+          }
+        }
+      });
 
-    const inventory = botType.inventory;
-    if (!inventory) {
-      Logger.error(`[${this.mod}] ${type} inventory is undefined`);
-      return;
+      Logger.info(`[${this.mod}] Settings registered successfully.`);
+    } catch (error) {
+      Logger.error(`[${this.mod}] Error registering settings: ${error.message}`);
     }
-
-    const items = inventory.items;
-    if (!items) {
-      Logger.error(`[${this.mod}] ${type} inventory items are undefined`);
-      return;
-    }
-
-    const backpacks = items.Backpack;
-    if (typeof backpacks !== 'object') {
-      Logger.error(`[${this.mod}] ${type} backpacks is not an object`);
-      return;
-    }
-
-    // Modify all backpack spawn rates to 100%
-    for (const key of Object.keys(backpacks)) {
-      backpacks[key] = 1.0; // Set the spawn chance to 100%
-    }
-
-    Logger.info(`[${this.mod}] Modified backpack spawn rates for player scavs.`);
   }
 }
 
-// Implement the IPostDBLoadMod interface
 module.exports = {
   mod: new PScavBagAdjust(),
-  IPostDBLoadMod: true
+  IPostDBLoadMod: true,
+  IMod: true,
+  register(container) {
+    Logger.info(`[${this.mod.mod}] Registering settings...`);
+    this.mod.registerSettings(container);
+  }
 };
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-  
+ 
