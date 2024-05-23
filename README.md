@@ -33,6 +33,10 @@ PScavBagAdjust is a mod for Single Player Tarkov (SPT-AKI) that adjusts the spaw
 
 Simply launch your SPT-AKI server and the mod will automatically adjust the backpack spawn rates for player scavs. There are no additional configuration steps required.
 
+## Configuration
+
+You can adjust the backpack spawn rate for player scavs using the SPT-AKI Mod Configuration menu (press F12 in-game). Look for "Player Scav Backpack Adjust" in the mod settings and modify the "Player Scav Backpack Spawn Rate" value as desired.
+
 ## Compatibility
 
 This mod is designed to work with SPT-AKI. It may not be compatible with other mods that alter bot inventories or spawn rates.
