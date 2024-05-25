@@ -18,6 +18,7 @@ class PScavBagAdjust {
   constructor() {
     this.mod = "PScavBagAdjust";
     this.config = this.loadConfig();
+    this.userSettings = this.loadUserSettings();
     Logger.info(`Loading: ${this.mod}`);
   }
 
@@ -35,6 +36,36 @@ class PScavBagAdjust {
     } catch (error) {
       Logger.error(`[${this.mod}] Error loading config: ${error.message}`);
       return { playerScavBackpackSpawnRate: { default: 100 } };
+    }
+  }
+
+  loadUserSettings() {
+    try {
+      const configPath = path.join(__dirname, '../mod.config.json');
+      if (fs.existsSync(configPath)) {
+        const configData = fs.readFileSync(configPath, 'utf8');
+        const parsedData = JSON.parse(configData);
+        Logger.info(`[${this.mod}] User settings loaded successfully.`);
+        return parsedData.userSettings || { playerScavBackpackSpawnRate: 100 };
+      } else {
+        throw new Error("User settings file not found.");
+      }
+    } catch (error) {
+      Logger.error(`[${this.mod}] Error loading user settings: ${error.message}`);
+      return { playerScavBackpackSpawnRate: 100 };
+    }
+  }
+
+  saveUserSettings() {
+    try {
+      const configPath = path.join(__dirname, '../mod.config.json');
+      const configData = fs.readFileSync(configPath, 'utf8');
+      const parsedData = JSON.parse(configData);
+      parsedData.userSettings = this.userSettings;
+      fs.writeFileSync(configPath, JSON.stringify(parsedData, null, 2), 'utf8');
+      Logger.info(`[${this.mod}] User settings saved successfully.`);
+    } catch (error) {
+      Logger.error(`[${this.mod}] Error saving user settings: ${error.message}`);
     }
   }
 
@@ -57,8 +88,8 @@ class PScavBagAdjust {
         throw new Error("Backpacks is not an object");
       }
 
-      // Modify backpack spawn rates based on config
-      const spawnRate = this.config.playerScavBackpackSpawnRate.default / 100;
+      // Modify backpack spawn rates based on user settings
+      const spawnRate = this.userSettings.playerScavBackpackSpawnRate / 100;
       let modifiedCount = 0;
       for (const key in backpacks) {
         backpacks[key] = spawnRate;
@@ -73,9 +104,8 @@ class PScavBagAdjust {
 
   registerSettings(container) {
     try {
-      Logger.info(`[${this.mod}] Attempting to register settings...`);
-      const modConfig = container.resolve("ModConfig");
-      modConfig.register({
+      const modSettings = container.resolve("ModSettings");
+      modSettings.registerSettings({
         id: "PScavBagAdjust",
         name: "PScavBagAdjust",
         settings: {
@@ -101,12 +131,18 @@ class PScavBagAdjust {
 module.exports = {
   mod: new PScavBagAdjust(),
   IPostDBLoadMod: true,
+  IPreAkiMod: true,
   IMod: true,
   register(container) {
-    Logger.info(`[${this.mod.mod}] Registering settings...`);
+    Logger.info(`[PScavBagAdjust] Registering settings...`);
     this.mod.registerSettings(container);
   }
 };
+
+
+
+
+
 
 
 
