@@ -1,7 +1,7 @@
 {
     "name": "gnar-bag-mod",
     "version": "0.0.1",
-    "akiVersion": "3.8.1",
+    "akiVersion": "3.8.3",
     "description": "A mod to control the spawn rate of backpacks on Scav Runs",
     "main": "src/index.js",
     "author": "gnar",

@@ -9,7 +9,11 @@
         "name": "Player Scav Backpack Spawn Rate",
         "description": "Adjust the spawn rate percentage for player scav backpacks."
       }
+    },
+    "userSettings": {
+      "playerScavBackpackSpawnRate": 100
     }
   }
+  
   
   
