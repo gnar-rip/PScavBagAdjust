@@ -46,7 +46,11 @@ class PScavBagAdjust {
         const configData = fs.readFileSync(configPath, 'utf8');
         const parsedData = JSON.parse(configData);
         Logger.info(`[${this.mod}] User settings loaded successfully.`);
+<<<<<<< HEAD
         return parsedData.userSettings || { playerScavBackpackSpawnRate: 100 };
+=======
+        return parsedData.userSettings;
+>>>>>>> 3ea387a52ef2047850e6dd88c17de87a97ef1215
       } else {
         throw new Error("User settings file not found.");
       }
@@ -103,6 +107,7 @@ class PScavBagAdjust {
   }
 
   registerSettings(container) {
+    Logger.info(`[${this.mod}] Attempting to register settings...`);
     try {
       const modSettings = container.resolve("ModSettings");
       modSettings.registerSettings({
@@ -147,4 +152,8 @@ module.exports = {
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3ea387a52ef2047850e6dd88c17de87a97ef1215
  
